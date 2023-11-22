@@ -1,0 +1,36 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  # Define variables here, such as connection strings, API keys, etc.
+  ASPNETCORE_ENVIRONMENT: "production"
+
+before_script:
+  - apt-get update -qy
+  - apt-get install -y curl jq
+
+build:
+  stage: build
+  script:
+    - dotnet restore
+    - dotnet build --configuration Release
+  artifacts:
+    paths:
+      - src/YourAspNetCoreApp/bin/Release/netcoreapp3.1/
+
+test:
+  stage: test
+  script:
+    - dotnet test --configuration Release --no-restore --verbosity normal
+  only:
+    - master  # Run tests only on the master branch
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production..."
+    # Add deployment steps here
+  only:
+    - master  # Deploy only on the master branch
