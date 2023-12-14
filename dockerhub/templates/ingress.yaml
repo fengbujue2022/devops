@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docker-hub
+spec:
+  rules:
+    - host: docker-hub.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: docker-hub
+                port:
+                  number: {{ .Values.dockerhub.port }}

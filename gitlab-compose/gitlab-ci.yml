@@ -1,4 +1,23 @@
-build:
-  image: python:alpine
+stages:
+  - build
+  - push
+  - deploy
+
+build_image:
+  stage: build
   script:
-    - python --version
+    - docker build -t your-image-name .
+    - docker login -u your-dockerhub-username -p your-dockerhub-password
+    - docker tag your-image-name your-dockerhub-username/your-image-name
+    - docker push your-dockerhub-username/your-image-name
+
+push_image:
+  stage: push
+  script:
+    - docker login -u your-dockerhub-username -p your-dockerhub-password
+    - docker push your-dockerhub-username/your-image-name
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -f your-deployment-file.yaml

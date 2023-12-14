@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "docker-hub.fullname" . }}
+  labels:
+    app: {{ include "docker-hub.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "docker-hub.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "docker-hub.name" . }}
+    spec:
+      containers:
+        - name: docker-hub
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          resources: {}
